@@ -6,10 +6,11 @@
     "license": "LGPL-3",
     "depends": ["hr", "mail"],
     "data": [
-        "security/security.xml",
-        "security/ir.model.access.csv",
-        "views/employee_views.xml",
-        "views/menus.xml"
+    "security/security.xml",
+    "security/ir.model.access.csv",
+    "data/employee_sequence.xml",
+    "views/employee_views.xml",
+    "views/menus.xml"
     ],
     "installable": true,
     "application": true
