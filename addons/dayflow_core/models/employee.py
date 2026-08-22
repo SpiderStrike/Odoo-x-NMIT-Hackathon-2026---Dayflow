@@ -1,208 +1,63 @@
+import re
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 
 
-class HrEmployee(models.Model):
-    _inherit = "hr.employee"
+class DayflowEmployee(models.Model):
+    _name = "dayflow.employee"
+    _description = "Dayflow Employee"
 
-    dayflow_employee_code = fields.Char(
-        string="Employee ID",
-        readonly=True,
-        copy=False,
-        index=True,
-    )
-
-    dayflow_joining_date = fields.Date(
+    name = fields.Char(string="First Name", required=True)
+    last_name = fields.Char(string="Last Name", required=True)
+    date_of_joining = fields.Date(
         string="Date of Joining",
-        tracking=True,
-    )
-
-    dayflow_employment_status = fields.Selection(
-        [
-            ("active", "Active"),
-            ("on_leave", "On Leave"),
-            ("inactive", "Inactive"),
-            ("terminated", "Terminated"),
-        ],
-        string="Employment Status",
-        default="active",
         required=True,
-        tracking=True,
+        default=fields.Date.context_today,
     )
-
-    dayflow_pan = fields.Char(
-        string="PAN",
-        groups="dayflow_core.group_dayflow_hr",
-    )
-
-    dayflow_uan = fields.Char(
-        string="UAN",
-        groups="dayflow_core.group_dayflow_hr",
-    )
-
-    dayflow_bank_account = fields.Char(
-        string="Bank Account",
-        groups="dayflow_core.group_dayflow_hr",
-    )
-
-    dayflow_bank_name = fields.Char(
-        string="Bank Name",
-        groups="dayflow_core.group_dayflow_hr",
-    )
-
-    dayflow_ifsc = fields.Char(
-        string="IFSC",
-        groups="dayflow_core.group_dayflow_hr",
-    )
-
-    dayflow_location = fields.Char(
-        string="Work Location",
-    )
-
-    dayflow_skills = fields.Text(
-        string="Skills",
-    )
-
-    dayflow_certifications = fields.Text(
-        string="Certifications",
-    )
-
-    dayflow_private_notes = fields.Text(
-        string="Private HR Notes",
-        groups="dayflow_core.group_dayflow_hr",
-    )
-
-    dayflow_initial_password = fields.Char(
-        string="Initial Password",
+    employee_id = fields.Char(
+        string="Employee ID",
+        required=True,
         copy=False,
-        groups="dayflow_core.group_dayflow_hr",
+        readonly=True,
+        index=True,
+        default=lambda self: _("New"),
     )
-
-    _sql_constraints = [
-        (
-            "dayflow_employee_code_unique",
-            "unique(dayflow_employee_code)",
-            "Employee ID must be unique.",
-        ),
-    ]
 
     @api.model_create_multi
     def create(self, vals_list):
-        sequence = self.env["ir.sequence"]
-
         for vals in vals_list:
-            if not vals.get("dayflow_employee_code"):
-                vals["dayflow_employee_code"] = sequence.next_by_code(
-                    "dayflow.employee"
-                )
+            if vals.get("employee_id", _("New")) == _("New"):
+                # Clean up names to uppercase alphabetic characters
+                first_name = re.sub(r"[^A-Z]", "", (vals.get("name") or "").upper())
+                last_name = re.sub(r"[^A-Z]", "", (vals.get("last_name") or "").upper())
 
-        return super().create(vals_list)
-
-    def write(self, vals):
-        if "dayflow_employee_code" in vals:
-            for employee in self:
-                if (
-                    employee.dayflow_employee_code
-                    and vals["dayflow_employee_code"]
-                    != employee.dayflow_employee_code
-                ):
-                    raise UserError(
-                        _("Employee ID cannot be changed.")
+                if not first_name or not last_name:
+                    raise ValidationError(
+                        _("First Name and Last Name must contain valid alphabetic characters.")
                     )
 
-        return super().write(vals)
+                # Extract first 2 characters (pad with 'X' if length < 2)
+                fn_part = (first_name[:2]).ljust(2, "X")
+                ln_part = (last_name[:2]).ljust(2, "X")
 
-    @api.constrains("dayflow_joining_date", "birthday")
-    def _check_employee_dates(self):
-        today = fields.Date.context_today(self)
+                # Extract joining year
+                joining_date = fields.Date.from_string(vals.get("date_of_joining"))
+                if not joining_date:
+                    raise ValidationError(_("Date of Joining is required for Employee ID generation."))
+                
+                year_str = str(joining_date.year)
 
-        for employee in self:
-            if (
-                employee.dayflow_joining_date
-                and employee.dayflow_joining_date > today
-            ):
-                raise ValidationError(
-                    _("Date of Joining cannot be in the future.")
-                )
+                # Obtain next 4-digit serial from sequence for the specific joining date
+                serial_num = self.env["ir.sequence"].next_by_code(
+                    "dayflow.employee.code",
+                    sequence_date=joining_date
+                ) or "0001"
 
-            if employee.birthday and employee.birthday > today:
-                raise ValidationError(
-                    _("Date of Birth cannot be in the future.")
-                )
+                # Standard sequence returns padded number string (e.g. '0001')
+                # Take last 4 digits in case sequence returns prefixed text
+                serial_part = serial_num[-4:]
 
-            if (
-                employee.birthday
-                and employee.dayflow_joining_date
-                and employee.birthday > employee.dayflow_joining_date
-            ):
-                raise ValidationError(
-                    _("Date of Birth cannot be after Date of Joining.")
-                )
+                # Construct exact Employee ID format: OIJODO20220001
+                vals["employee_id"] = f"OI{fn_part}{ln_part}{year_str}{serial_part}"
 
-    def action_create_user_account(self):
-        self.ensure_one()
-
-        if not self.dayflow_employee_code:
-            raise UserError(
-                _("The employee must have an Employee ID.")
-            )
-
-        if self.user_id:
-            raise UserError(
-                _("This employee already has an Odoo user account.")
-            )
-
-        password = self.dayflow_initial_password
-
-        if not password:
-            raise UserError(
-                _(
-                    "Enter an initial password before creating "
-                    "the user account."
-                )
-            )
-
-        login = self.dayflow_employee_code
-
-        if self.env["res.users"].sudo().search_count(
-            [("login", "=", login)]
-        ):
-            raise UserError(
-                _("An Odoo user with login '%s' already exists.")
-                % login
-            )
-
-        user = self.env["res.users"].sudo().create(
-            {
-                "name": self.name,
-                "login": login,
-                "password": password,
-                "email": self.work_email,
-                "employee_id": self.id,
-            }
-        )
-
-        employee_group = self.env.ref(
-            "dayflow_core.group_dayflow_employee"
-        )
-
-        user.sudo().write(
-            {
-                "groups_id": [(4, employee_group.id)],
-            }
-        )
-
-        self.sudo().write(
-            {
-                "user_id": user.id,
-                "dayflow_initial_password": False,
-            }
-        )
-
-        return {
-            "type": "ir.actions.act_window",
-            "res_model": "res.users",
-            "res_id": user.id,
-            "view_mode": "form",
-            "target": "current",
-        }
+        return super(DayflowEmployee, self).create(vals_list)
