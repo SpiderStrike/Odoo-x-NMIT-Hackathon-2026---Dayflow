@@ -1,0 +1,33 @@
+<odoo>
+    <record id="view_dayflow_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.form.dayflow</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_email']" position="after">
+                <field name="dayflow_employee_code"/>
+                <field name="dayflow_joining_date"/>
+                <field name="dayflow_location"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Dayflow Details">
+                    <group>
+                        <group>
+                            <field name="dayflow_pan"/>
+                            <field name="dayflow_uan"/>
+                            <field name="dayflow_skills"/>
+                            <field name="dayflow_certifications"/>
+                        </group>
+                        <group groups="dayflow_core.group_dayflow_hr">
+                            <field name="dayflow_bank_account"/>
+                            <field name="dayflow_bank_name"/>
+                            <field name="dayflow_ifsc"/>
+                            <field name="dayflow_private_notes"/>
+                            <field name="dayflow_initial_password"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

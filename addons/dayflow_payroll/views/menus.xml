@@ -1,0 +1,12 @@
+<odoo>
+    <menuitem id="menu_dayflow_payroll" name="Payroll"
+              parent="dayflow_core.menu_dayflow_root"
+              action="action_dayflow_payroll"
+              sequence="50"
+              groups="dayflow_core.group_dayflow_hr"/>
+    <menuitem id="menu_dayflow_salary" name="Salary"
+              parent="dayflow_core.menu_dayflow_root"
+              action="action_dayflow_salary"
+              sequence="45"
+              groups="dayflow_core.group_dayflow_hr"/>
+</odoo>

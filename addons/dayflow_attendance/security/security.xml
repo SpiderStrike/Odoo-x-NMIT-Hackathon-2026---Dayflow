@@ -1,0 +1,14 @@
+<odoo>
+    <record id="rule_attendance_employee_own" model="ir.rule">
+        <field name="name">Employee sees own attendance</field>
+        <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+        <field name="groups" eval="[(4, ref('dayflow_core.group_dayflow_employee'))]"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+    </record>
+    <record id="rule_attendance_hr_all" model="ir.rule">
+        <field name="name">HR sees all attendance</field>
+        <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+        <field name="groups" eval="[(4, ref('dayflow_core.group_dayflow_hr'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+</odoo>

@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dayflow_notification_employee,notification employee,model_dayflow_notification,dayflow_core.group_dayflow_employee,1,1,1,0
+access_dayflow_notification_hr,notification hr,model_dayflow_notification,dayflow_core.group_dayflow_hr,1,1,1,1

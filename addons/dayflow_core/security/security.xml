@@ -1,0 +1,32 @@
+<odoo>
+    <record id="group_dayflow_employee" model="res.groups">
+        <field name="name">Dayflow Employee</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+    </record>
+
+    <record id="group_dayflow_hr" model="res.groups">
+        <field name="name">Dayflow HR</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[(4, ref('dayflow_core.group_dayflow_employee'))]"/>
+    </record>
+
+    <record id="group_dayflow_admin" model="res.groups">
+        <field name="name">Dayflow Admin</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[(4, ref('dayflow_core.group_dayflow_hr'))]"/>
+    </record>
+
+    <record id="rule_employee_own_employee" model="ir.rule">
+        <field name="name">Employee sees own employee record</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="groups" eval="[(4, ref('dayflow_core.group_dayflow_employee'))]"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+    </record>
+
+    <record id="rule_hr_all_employees" model="ir.rule">
+        <field name="name">HR sees all employees</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="groups" eval="[(4, ref('dayflow_core.group_dayflow_hr'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+</odoo>

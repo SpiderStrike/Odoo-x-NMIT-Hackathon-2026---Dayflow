@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dayflow_leave_employee,leave employee,hr_holidays.model_hr_leave,dayflow_core.group_dayflow_employee,1,1,1,0
+access_dayflow_leave_hr,leave hr,hr_holidays.model_hr_leave,dayflow_core.group_dayflow_hr,1,1,1,1

@@ -1,0 +1,7 @@
+<odoo>
+    <menuitem id="menu_dayflow_leave" name="Leave"
+              parent="dayflow_core.menu_dayflow_root"
+              action="action_dayflow_leave"
+              sequence="40"
+              groups="dayflow_core.group_dayflow_employee,dayflow_core.group_dayflow_hr"/>
+</odoo>

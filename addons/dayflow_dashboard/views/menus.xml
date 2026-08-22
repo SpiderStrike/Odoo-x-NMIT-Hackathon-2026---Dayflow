@@ -1,0 +1,7 @@
+<odoo>
+    <menuitem id="menu_dayflow_dashboard" name="Dashboard"
+              parent="dayflow_core.menu_dayflow_root"
+              action="action_dayflow_dashboard"
+              sequence="5"
+              groups="dayflow_core.group_dayflow_employee,dayflow_core.group_dayflow_hr"/>
+</odoo>

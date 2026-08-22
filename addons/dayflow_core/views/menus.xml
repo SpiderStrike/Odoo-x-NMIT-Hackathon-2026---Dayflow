@@ -1,0 +1,9 @@
+<odoo>
+    <menuitem id="menu_dayflow_root" name="Dayflow" sequence="10"
+              groups="dayflow_core.group_dayflow_employee,dayflow_core.group_dayflow_hr"/>
+    <menuitem id="menu_dayflow_employees" name="Employees"
+              parent="menu_dayflow_root"
+              action="hr.open_view_employee_list_my"
+              sequence="20"
+              groups="dayflow_core.group_dayflow_hr"/>
+</odoo>

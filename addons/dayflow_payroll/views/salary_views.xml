@@ -1,0 +1,53 @@
+<odoo>
+    <record id="view_dayflow_salary_list" model="ir.ui.view">
+        <field name="name">dayflow.salary.list</field>
+        <field name="model">dayflow.salary.structure</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="employee_id"/>
+                <field name="wage"/>
+                <field name="basic_salary"/>
+                <field name="hra"/>
+                <field name="standard_allowance"/>
+                <field name="gross_salary"/>
+                <field name="pf"/>
+                <field name="professional_tax"/>
+                <field name="net_salary"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_dayflow_salary_form" model="ir.ui.view">
+        <field name="name">dayflow.salary.form</field>
+        <field name="model">dayflow.salary.structure</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="wage"/>
+                        <field name="currency_id"/>
+                    </group>
+                    <group string="Earnings">
+                        <field name="basic_salary"/>
+                        <field name="hra"/>
+                        <field name="standard_allowance"/>
+                        <field name="performance_bonus"/>
+                        <field name="lta"/>
+                        <field name="fixed_allowance"/>
+                        <field name="gross_salary"/>
+                    </group>
+                    <group string="Deductions">
+                        <field name="pf"/>
+                        <field name="professional_tax"/>
+                        <field name="net_salary"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_dayflow_salary" model="ir.actions.act_window">
+        <field name="name">Salary Structures</field>
+        <field name="res_model">dayflow.salary.structure</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

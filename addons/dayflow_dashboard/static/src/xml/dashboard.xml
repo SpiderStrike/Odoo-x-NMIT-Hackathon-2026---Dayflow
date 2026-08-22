@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="dayflow_dashboard.Dashboard">
+        <div class="o_dayflow_dashboard p-4">
+            <h1>Dayflow Dashboard</h1>
+            <p>Employee self-service and HR KPI foundation.</p>
+            <div class="row g-3">
+                <div class="col-lg-3"><div class="card p-3"><h5>Present</h5><span>Attendance KPI</span></div></div>
+                <div class="col-lg-3"><div class="card p-3"><h5>On Leave</h5><span>Leave KPI</span></div></div>
+                <div class="col-lg-3"><div class="card p-3"><h5>Absent</h5><span>Attendance anomaly KPI</span></div></div>
+                <div class="col-lg-3"><div class="card p-3"><h5>Payroll</h5><span>HR-only payroll KPI</span></div></div>
+            </div>
+        </div>
+    </t>
+</templates>

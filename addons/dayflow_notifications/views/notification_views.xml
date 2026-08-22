@@ -1,0 +1,14 @@
+<odoo>
+    <record id="view_dayflow_notification_list" model="ir.ui.view">
+        <field name="name">dayflow.notification.list</field>
+        <field name="model">dayflow.notification</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="recipient_id"/>
+                <field name="notification_type"/>
+                <field name="is_read"/>
+            </list>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,22 @@
+<odoo>
+    <record id="view_dayflow_attendance_list" model="ir.ui.view">
+        <field name="name">dayflow.attendance.list</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="employee_id"/>
+                <field name="check_in"/>
+                <field name="check_out"/>
+                <field name="worked_hours"/>
+                <field name="dayflow_extra_hours"/>
+                <field name="dayflow_status"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_dayflow_attendance" model="ir.actions.act_window">
+        <field name="name">Attendance</field>
+        <field name="res_model">hr.attendance</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_dayflow_attendance_list"/>
+    </record>
+</odoo>
